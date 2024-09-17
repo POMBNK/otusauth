@@ -1,0 +1,174 @@
+components:
+  schemas:
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    OK:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    SignInForm:
+      properties:
+        password:
+          maxLength: 256
+          type: string
+        username:
+          maxLength: 256
+          type: string
+      required:
+      - username
+      - password
+      type: object
+    SignUpForm:
+      example:
+        email: bestjohn@doe.com
+        firstName: John
+        lastName: Doe
+        password: password
+        phone: "+71002003040"
+        username: johndoe589
+      properties:
+        email:
+          format: email
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          maxLength: 256
+          type: string
+        phone:
+          format: phone
+          type: string
+        username:
+          maxLength: 256
+          type: string
+      required:
+      - username
+      - password
+      - firstName
+      - lastName
+      - phone
+      type: object
+generate:
+  models: true
+info:
+  contact:
+    email: schetinnikov@gmail.com
+  description: |
+    This is simple client API
+  title: User Service
+  version: 1.0.0
+openapi: 3.0.0
+output: internal/transport/http/auth/model.gen.go
+package: auth
+paths:
+  /sign-in:
+    post:
+      description: sign-up a new user
+      operationId: signIn
+      requestBody:
+        content:
+          application/json:
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  password: password
+                  username: johndoe589
+            schema:
+              $ref: '#/components/schemas/SignInForm'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Created
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+      summary: sign-in
+  /sign-up:
+    post:
+      description: sign-up a new user
+      operationId: signUp
+      requestBody:
+        content:
+          application/json:
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  email: bestjohn@doe.com
+                  firstName: John
+                  lastName: Doe
+                  password: password
+                  phone: "+71002003040"
+                  username: johndoe589
+            schema:
+              $ref: '#/components/schemas/SignUpForm'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal error
+      summary: sign-up
+  /validate:
+    get:
+      description: validate user token
+      operationId: validate
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+      summary: validate
+servers:
+- url: /api/v1
+tags:
+- description: Operations about user
+  name: user

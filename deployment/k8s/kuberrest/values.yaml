@@ -1,0 +1,51 @@
+postgresql:
+  fullnameOverride: postgres
+  image:
+    tag: 16.3.0-debian-12-r23
+  auth:
+    password: postgres
+    username: postgres
+
+  commonLabels:
+    name: postgres
+    component: database
+    manager: helm
+
+  configmap:
+    name: postgres-configmap
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorSelector: {}
+
+
+
+
+#grafana:
+#  ingress:
+#    enabled: true
+#  admin:
+#    user: admin
+#    password: admin
+
+#prometheus:
+#  server:
+#    configPath: /configs/prometheus.yaml
+
+app:
+  name: rest-app
+  component: backend
+  manager: helm
+
+image:
+  repository: pombnk/kuberrest
+  tag: latest
+
+deployments:
+  name: app
+  containerPort: 3000
+  imagePullPolicy: Always
+
+configmap:
+  name: postgres-configmap

@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is simple client API
+  version: "1.0.0"
+  title: User Service
+  contact:
+    email: schetinnikov@gmail.com
+servers:
+  - url: /api/v1
+tags:
+  - name: user
+    description: Operations about user
+paths:
+  /validate:
+    get:
+      summary: validate
+      description: validate user token
+      operationId: validate
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sign-up:
+    post:
+      summary: sign-up
+      description: sign-up a new user
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpForm'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  username: johndoe589
+                  password: password
+                  firstName: John
+                  lastName: Doe
+                  email: bestjohn@doe.com
+                  phone: '+71002003040'
+      responses:
+        "200":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        "500":
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sign-in:
+    post:
+      summary: sign-in
+      description: sign-up a new user
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInForm'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  username: johndoe589
+                  password: password
+      responses:
+        "200":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    SignInForm:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 256
+        password:
+          type: string
+          maxLength: 256
+      required:
+        - username
+        - password
+
+    SignUpForm:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 256
+        password:
+          type: string
+          maxLength: 256
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          format: phone
+      required:
+        - username
+        - password
+        - firstName
+        - lastName
+        - phone
+      example:
+        username: johndoe589
+        password: password
+        firstName: John
+        lastName: Doe
+        email: bestjohn@doe.com
+        phone: '+71002003040'
+
+    OK:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

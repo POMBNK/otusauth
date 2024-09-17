@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  gateway:
+    build: .
+    container_name: gateway
+    hostname: gateway
+    image: gateway
+    environment:
+      - PG_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@${POSTGRES_DB:-postgres}:5432/${POSTGRES_DB:-postgres}
+      - PORT=${HTTP_PORT:-8082}
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:15-alpine3.20
+    environment:
+      POSTGRES_DB: "authdb"
+      POSTGRES_USER: "pombnk"
+      POSTGRES_PASSWORD: "postgres"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - authdb-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  authdb-data:
