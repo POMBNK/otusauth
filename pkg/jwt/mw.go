@@ -109,6 +109,7 @@ func MiddlewareOAPI(secretJWT string) MiddlewareFunc {
 			tokenClaims := helper.ParseMapClaims(tokenMC)
 
 			ctx := context.WithValue(r.Context(), "user_id", tokenClaims.UserID)
+			ctx = context.WithValue(ctx, "username", tokenClaims.Username)
 			h.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}

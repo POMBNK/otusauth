@@ -35,8 +35,29 @@ type SignUpForm struct {
 	Username  string               `json:"username"`
 }
 
+// UpdateUser defines model for UpdateUser.
+type UpdateUser struct {
+	Email     openapi_types.Email `json:"email"`
+	FirstName string              `json:"firstName"`
+	LastName  string              `json:"lastName"`
+	Phone     string              `json:"phone"`
+	Username  string              `json:"username"`
+}
+
+// User defines model for User.
+type User struct {
+	Email     *openapi_types.Email `json:"email,omitempty"`
+	FirstName string               `json:"firstName"`
+	LastName  string               `json:"lastName"`
+	Phone     string               `json:"phone"`
+	Username  string               `json:"username"`
+}
+
 // SignInJSONRequestBody defines body for SignIn for application/json ContentType.
 type SignInJSONRequestBody = SignInForm
 
 // SignUpJSONRequestBody defines body for SignUp for application/json ContentType.
 type SignUpJSONRequestBody = SignUpForm
+
+// UpdateUserJSONRequestBody defines body for UpdateUser for application/json ContentType.
+type UpdateUserJSONRequestBody = UpdateUser

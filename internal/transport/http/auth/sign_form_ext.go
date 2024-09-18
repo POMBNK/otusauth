@@ -29,3 +29,23 @@ func (r *SignUpForm) ToUser() (entity.UserToSignUp, error) {
 
 	return u, nil
 }
+
+func (r *UpdateUser) ToUser() (entity.User, error) {
+	u := entity.User{
+		FirstName: r.FirstName,
+		LastName:  r.LastName,
+		Phone:     r.Phone,
+		Username:  r.Username,
+	}
+
+	if r.Email != "" {
+		email, err := r.Email.MarshalJSON()
+		if err != nil {
+			return entity.User{}, err
+		}
+		pemail := string(email)
+		u.Email = &pemail
+	}
+
+	return u, nil
+}
