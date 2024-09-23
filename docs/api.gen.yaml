@@ -174,6 +174,10 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Unauthorized
       summary: sign-in
+      tags:
+      - auth
+    servers:
+    - url: /
   /sign-up:
     post:
       description: sign-up a new user
@@ -214,6 +218,10 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Internal error
       summary: sign-up
+      tags:
+      - auth
+    servers:
+    - url: /
   /user/{userId}:
     delete:
       description: deletes a single user based on the ID supplied
@@ -233,33 +241,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/OK'
           description: user deleted
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Bad Request
-      tags:
-      - user
-    get:
-      description: Returns a user based on a single ID, if the user does not have
-        access to the user
-      operationId: find user by id
-      parameters:
-      - description: ID of user
-        in: path
-        name: userId
-        required: true
-        schema:
-          format: int64
-          type: integer
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: user response
         "400":
           content:
             application/json:
@@ -308,6 +289,33 @@ paths:
           description: Bad Request
       tags:
       - user
+  /user/{username}:
+    get:
+      description: Returns a user based on a single username, if the user does not
+        have access to the user
+      operationId: find user by username
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: user response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+      tags:
+      - user
   /validate:
     get:
       description: validate user token
@@ -326,6 +334,8 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Unauthorized
       summary: validate
+      tags:
+      - auth
 servers:
 - url: /api/v1
 tags:

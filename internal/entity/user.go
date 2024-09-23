@@ -10,6 +10,26 @@ type User struct {
 	Username     string  `json:"username" db:"username"`
 }
 
+type UserResponse struct {
+	ID        int     `json:"ID"`
+	Email     *string `json:"email,omitempty"`
+	FirstName string  `json:"firstName"`
+	LastName  string  `json:"lastName"`
+	Phone     string  `json:"phone"`
+	Username  string  `json:"username"`
+}
+
+func (u *User) ToResponse() UserResponse {
+	return UserResponse{
+		ID:        u.ID,
+		Email:     u.Email,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Phone:     u.Phone,
+		Username:  u.Username,
+	}
+}
+
 type UserToSignUp struct {
 	Email     *string `json:"email,omitempty"`
 	FirstName string  `json:"firstName"`

@@ -34,11 +34,11 @@ type ServerInterface interface {
 	// (DELETE /user/{userId})
 	DeleteUser(w http.ResponseWriter, r *http.Request, userId int64)
 
-	// (GET /user/{userId})
-	FindUserById(w http.ResponseWriter, r *http.Request, userId int64)
-
 	// (PUT /user/{userId})
 	UpdateUser(w http.ResponseWriter, r *http.Request, userId int64)
+
+	// (GET /user/{username})
+	FindUserByUsername(w http.ResponseWriter, r *http.Request, username string)
 	// validate
 	// (GET /validate)
 	Validate(w http.ResponseWriter, r *http.Request)
@@ -109,32 +109,6 @@ func (siw *ServerInterfaceWrapper) DeleteUser(w http.ResponseWriter, r *http.Req
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// FindUserById operation middleware
-func (siw *ServerInterfaceWrapper) FindUserById(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var err error
-
-	// ------------- Path parameter "userId" -------------
-	var userId int64
-
-	err = runtime.BindStyledParameterWithOptions("simple", "userId", r.PathValue("userId"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "userId", Err: err})
-		return
-	}
-
-	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.FindUserById(w, r, userId)
-	}))
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler.ServeHTTP(w, r.WithContext(ctx))
-}
-
 // UpdateUser operation middleware
 func (siw *ServerInterfaceWrapper) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -152,6 +126,32 @@ func (siw *ServerInterfaceWrapper) UpdateUser(w http.ResponseWriter, r *http.Req
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.UpdateUser(w, r, userId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// FindUserByUsername operation middleware
+func (siw *ServerInterfaceWrapper) FindUserByUsername(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "username" -------------
+	var username string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "username", r.PathValue("username"), &username, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "username", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.FindUserByUsername(w, r, username)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -293,8 +293,8 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("POST "+options.BaseURL+"/sign-in", wrapper.SignIn)
 	m.HandleFunc("POST "+options.BaseURL+"/sign-up", wrapper.SignUp)
 	m.HandleFunc("DELETE "+options.BaseURL+"/user/{userId}", wrapper.DeleteUser)
-	m.HandleFunc("GET "+options.BaseURL+"/user/{userId}", wrapper.FindUserById)
 	m.HandleFunc("PUT "+options.BaseURL+"/user/{userId}", wrapper.UpdateUser)
+	m.HandleFunc("GET "+options.BaseURL+"/user/{username}", wrapper.FindUserByUsername)
 	m.HandleFunc("GET "+options.BaseURL+"/validate", wrapper.Validate)
 
 	return m
@@ -387,32 +387,6 @@ func (response DeleteUser400JSONResponse) VisitDeleteUserResponse(w http.Respons
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FindUserByIdRequestObject struct {
-	UserId int64 `json:"userId"`
-}
-
-type FindUserByIdResponseObject interface {
-	VisitFindUserByIdResponse(w http.ResponseWriter) error
-}
-
-type FindUserById200JSONResponse User
-
-func (response FindUserById200JSONResponse) VisitFindUserByIdResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type FindUserById400JSONResponse Error
-
-func (response FindUserById400JSONResponse) VisitFindUserByIdResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(400)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
 type UpdateUserRequestObject struct {
 	UserId int64 `json:"userId"`
 	Body   *UpdateUserJSONRequestBody
@@ -434,6 +408,32 @@ func (response UpdateUser200JSONResponse) VisitUpdateUserResponse(w http.Respons
 type UpdateUser400JSONResponse Error
 
 func (response UpdateUser400JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FindUserByUsernameRequestObject struct {
+	Username string `json:"username"`
+}
+
+type FindUserByUsernameResponseObject interface {
+	VisitFindUserByUsernameResponse(w http.ResponseWriter) error
+}
+
+type FindUserByUsername200JSONResponse User
+
+func (response FindUserByUsername200JSONResponse) VisitFindUserByUsernameResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FindUserByUsername400JSONResponse Error
+
+func (response FindUserByUsername400JSONResponse) VisitFindUserByUsernameResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(400)
 
@@ -477,11 +477,11 @@ type StrictServerInterface interface {
 	// (DELETE /user/{userId})
 	DeleteUser(ctx context.Context, request DeleteUserRequestObject) (DeleteUserResponseObject, error)
 
-	// (GET /user/{userId})
-	FindUserById(ctx context.Context, request FindUserByIdRequestObject) (FindUserByIdResponseObject, error)
-
 	// (PUT /user/{userId})
 	UpdateUser(ctx context.Context, request UpdateUserRequestObject) (UpdateUserResponseObject, error)
+
+	// (GET /user/{username})
+	FindUserByUsername(ctx context.Context, request FindUserByUsernameRequestObject) (FindUserByUsernameResponseObject, error)
 	// validate
 	// (GET /validate)
 	Validate(ctx context.Context, request ValidateRequestObject) (ValidateResponseObject, error)
@@ -604,32 +604,6 @@ func (sh *strictHandler) DeleteUser(w http.ResponseWriter, r *http.Request, user
 	}
 }
 
-// FindUserById operation middleware
-func (sh *strictHandler) FindUserById(w http.ResponseWriter, r *http.Request, userId int64) {
-	var request FindUserByIdRequestObject
-
-	request.UserId = userId
-
-	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
-		return sh.ssi.FindUserById(ctx, request.(FindUserByIdRequestObject))
-	}
-	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "FindUserById")
-	}
-
-	response, err := handler(r.Context(), w, r, request)
-
-	if err != nil {
-		sh.options.ResponseErrorHandlerFunc(w, r, err)
-	} else if validResponse, ok := response.(FindUserByIdResponseObject); ok {
-		if err := validResponse.VisitFindUserByIdResponse(w); err != nil {
-			sh.options.ResponseErrorHandlerFunc(w, r, err)
-		}
-	} else if response != nil {
-		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
-	}
-}
-
 // UpdateUser operation middleware
 func (sh *strictHandler) UpdateUser(w http.ResponseWriter, r *http.Request, userId int64) {
 	var request UpdateUserRequestObject
@@ -656,6 +630,32 @@ func (sh *strictHandler) UpdateUser(w http.ResponseWriter, r *http.Request, user
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(UpdateUserResponseObject); ok {
 		if err := validResponse.VisitUpdateUserResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// FindUserByUsername operation middleware
+func (sh *strictHandler) FindUserByUsername(w http.ResponseWriter, r *http.Request, username string) {
+	var request FindUserByUsernameRequestObject
+
+	request.Username = username
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.FindUserByUsername(ctx, request.(FindUserByUsernameRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "FindUserByUsername")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(FindUserByUsernameResponseObject); ok {
+		if err := validResponse.VisitFindUserByUsernameResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
@@ -690,23 +690,23 @@ func (sh *strictHandler) Validate(w http.ResponseWriter, r *http.Request) {
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xXTXPbNhD9K5htb2VM+itteUpdJTNqOnUnqXpJfYDJFQmHBFAAlONq+N87C5ASJdEZ",
-	"ZxrLSicXm1oC2Id9bz+4hEzVWkmUzkK6BJuVWHP/+NIYZehBG6XROIHenKkc6f9cmZo7SEFId3oCEbg7",
-	"jeEnFmigjaBGa3nhV3cvrTNCFtC2ERj8uxEGc0jfhTPX669Wh6nrG8wcnXX5+mCgvBWFnMpXytS7kDS3",
-	"9laZnJ5r/uFXlIUrIT05fx5tO46gsWgkr/EBi7dQrnZGa4/3QZ3pHip+4LWuvDusuagghWu07kaV8kWu",
-	"8ChTNUQwF8a63zws+EWVEiKo+MoyURtO0/VjBLpUktZ89/1xkpwkyWlylsDwmkCucoXnP/xI6DZD10Ea",
-	"0BksI4EbQFzuvl2jHXn5SQR1FxpACpZH53J4xcGFekRjVM90zh3OLJrPTPWXQOqeefooOVF3xVGSvtLz",
-	"1PTs0kInCTlXoaVIxzM3JIZaohNSivdq8aIgo6enjSBHmxmhnVASUvijFJYJy6wgallWCZSO/fT79C8i",
-	"zglHfHsFsLdoFiIjTAs0Nmw/PkqOEjpVaZRcC0jh1JuoLLjS0xVbUchnQvpOo6yHuQnCL2g040ziLaOY",
-	"gD/RcFowpYId2heE6KF1Fyq/66+O0p/Jta5E5rfEN1bJgWTDlOAfnzWdmm1T19zcQQovO11HsOBVg5sd",
-	"cVje7tEnURFGENr6rcE5pPBNvJ5R4m5AiQdNuN2UgjMNeoPVStoA+CRJHnDFh3m+fB08bgb+Z4PcYU4E",
-	"niXHn81ZGMJG/M0kb1ypjPiHnFLYViT0IiFr3AniPytmpvemmAOYTT5Nh92EdXg6TB5fhxc8Z2+CLMjn",
-	"+T58TqUj1iqG3Yod9Tc6qJ/ojZf0d5q3QfsVOtzNgmC3jDMrZFGhTwR2zS3mTEnmSmTTCbMNXQbznQyZ",
-	"+O2zkDyaG16jQ2MhfbftaDphat6nGVVyX90hgk6FAStsC2kox+HnzvOzkc+d9mrvsvPhCkF8Iu21EThe",
-	"2H4UgKs2ggJHCt4bdI2RRPUmxyvqp5OIibnnPFxLoWVSOVbyBTKeZWgtc2q1YEcNr4TMSQsXd57J/7ce",
-	"vOjvU0Tv9XAkoZsRSYRvp8D2rXAl81PaxxJ+8LV1MAR/Cb35kbrwgI62a8P7L3+NB3Ew5Y/634JXgkCR",
-	"j9Fi2C8I2nfqPcodrf/ZH7L3sJL16efpVRCDINEs+kxvDOVCzLWIF8dAWdhxsB3myz6glvFr1bi+Hgxq",
-	"ALRX7b8BAAD//0LcvSeOFQAA",
+	"H4sIAAAAAAAC/+xXTXPbNhD9K5htb2Ui+itteUpdJzNqOnUnqXpJfYDJFQmHBFAAlONq+N87C5AS9OWx",
+	"p7GszPRiU+Bi92Hf28VyDrlqtJIonYVsDjavsOH+8Y0xytCDNkqjcQL9cq4KpP9TZRruIAMh3ckxJODu",
+	"NIafWKKBLoEGreWlt+5fWmeELKHrEjD4dysMFpB9DD6X9lcLZ+r6BnNHvi7fHQyUD6KUY/lWmWYTkubW",
+	"3ipT0HPDP/+KsnQVZMdnr5L1wAm0Fo3kDT7AeA3lYmeyjLgL6kQPUPEzb3Ttw2HDRQ0ZXKN1N6qSrwuF",
+	"L3PVQAJTYaz7zcOCX1QlIYGaL1Yu1ErQbPmYgK6UJJvvvj9K0+M0PUlPU4iPCRSqUHj2w4+EbjV1PaSI",
+	"zrCyJXERxPnm2yXaLS8fRVB/oAhSWHlyLuMjRgcaEG2jeqIL7nBi0Xxhqr8GUvfM073kJP0Rt5L0Pz3P",
+	"Tc8mLeRJyKkKV4p0PHcxMXQlOiGl+KRmr0ta9PR0CRRocyO0E0pCBn9UwjJhmRVELctrgdKxn34f/0XE",
+	"OeGIb68A9gHNTOSEaYbGhu1HL9OXKXlVGiXXAjI48UvUFlzl6RpZUcoXQvqbRlkPcxWEN2g140ziLaOc",
+	"gPdoOBmMqWGH6wtC9tC6c1XcDUdH6X1yrWuR+y2jG6tkJNkwJfjHF22vZts2DTd3kMGbXtcJzHjd4uqN",
+	"GLe3HfokKsIIQlu/NTiFDL4ZLWeUUT+gjKJLuFuVgjMt+gWrlbQB8HGaPuCID4t8+S5EXE38zwa5w4II",
+	"PE2PvliwMIRtiTeRvHWVMuIfCkppQ0NiguzjHFpDwh1Bd5VE5AziScDxkgyBXMDVzs1d0iuu1f9ZcRO9",
+	"N8UdwGzzOB33E9rh6Th9eh2f84K9D7KgmGf7iDmWjlirGfYWD66eVj+uekgeozn9HRddqJ0aHW5WUVi3",
+	"jDMrZFmjLyR2zS0WTEnmKmTjC2ZbSgYWGxV24bdPQvFpbniDbkC0dvYLpqZDmdJN4m8XSKBXccAK60KM",
+	"5Rx/br063fK5RYnbs2x9ukISn0m73VIYPrvEv263NMwwqAeCb4WrmB8J7mM3Gu0Pht2voZE/UcuO6Oj6",
+	"nr1/rbcexMFofbXZUXp9uytxSwG8R9caSb1utcmt9D5ykTAx9a0vVLdCy6RyrOIzZDzP0Vrm1MJgo2ze",
+	"ClkQS+d3k/gT+57yib4hdhRP/3Z3+ax/pDxlKxwkuFUgQ9RDUsiM14Jku1Mag0Fg3KlPKDdo/XNwsvfC",
+	"o9VnG+8XjXK2PP/aJLJjkOFajGZHfpzpN6yn/XJIsGX8WrVuqKdI+DTQ/BsAAP//tHM9lS0WAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

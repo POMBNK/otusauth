@@ -5,6 +5,10 @@ import (
 	"github.com/POMBNK/gateway/internal/entity"
 )
 
+func (s *Service) FindUserByUsername(ctx context.Context, username string) (entity.User, error) {
+	return s.repo.GetByUsername(ctx, username)
+}
+
 func (s *Service) FindUserBydID(ctx context.Context, userID int) (entity.User, error) {
 	return s.repo.FindUserBydID(ctx, userID)
 }

@@ -1,0 +1,46 @@
+replicaCount: 1
+
+app:
+    name: auth
+    component: backend
+    manager: helm
+
+postgresql:
+  fullnameOverride: postgres
+  image:
+    tag: 16.3.0-debian-12-r23
+  auth:
+    database: authdb
+    password: postgres
+    username: pombnk
+
+  commonLabels:
+    name: postgres
+    component: database
+    manager: helm
+
+  configmap:
+    name: postgres-configmap
+
+deployments:
+  name: auth
+  containerPort: 3000
+  imagePullPolicy: Always
+
+ingress:
+  name: http
+  protocol: HTTP
+  port: 82
+  extension: svc.cluster.local
+
+image:
+  repository: pombnk/gateway
+  pullPolicy: IfNotPresent
+  tag: v1.0
+
+migration:
+  repository: pombnk/gateway-migrations
+  pullPolicy: IfNotPresent
+  tag: latest
+
+
