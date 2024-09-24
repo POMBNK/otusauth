@@ -24,4 +24,6 @@ make test
 ```shell
 make stop
 ```
+Примерный отчет после запуска тестов
 
+![img.png](http_tests/img.png)
