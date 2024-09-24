@@ -3,7 +3,9 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/POMBNK/gateway/pkg/jwt"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -100,6 +102,24 @@ func (s *Server) UpdateUser(w http.ResponseWriter, r *http.Request, userId int64
 		w.Write([]byte(err.Error()))
 		return
 	}
+
+	updatedUser, err := s.authService.FindUserBydID(r.Context(), int(userId))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	tokenizer := jwt.NewTokenizer(os.Getenv("SECRET"))
+	pair, err := tokenizer.GeneratePair(strconv.Itoa(updatedUser.ID), updatedUser.Username)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
+	acook, rcook := tokenizer.PrepareCookies(pair)
+	http.SetCookie(w, acook)
+	http.SetCookie(w, rcook)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("updated successfully"))

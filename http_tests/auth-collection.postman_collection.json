@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "5f762c49-2bf0-4158-8794-ceb71d05bcae",
+		"name": "auth-collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25235052"
+	},
+	"item": [
+		{
+			"name": "1) user 1 sign-up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"bestjohn123@doe.com\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"password\": \"password\",\r\n  \"phone\": \"+71001003040\",\r\n  \"username\": \"johndoe123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arch.homework/sign-up",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"sign-up"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "1) user 1 sign-up",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"bestjohn123@doe.com\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"password\": \"password\",\r\n  \"phone\": \"+71001003040\",\r\n  \"username\": \"johndoe123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://arch.homework/sign-up",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:36:05 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "22"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "signed up successfully"
+				}
+			]
+		},
+		{
+			"name": "2) failed check user 1 data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arch.homework/api/v1/user/johndoe123",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"johndoe123"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "2) failed check user 1 data",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://arch.homework/api/v1/user/johndoe123",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"johndoe123"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:36:19 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "you are not allowed to perform this action"
+				}
+			]
+		},
+		{
+			"name": "3) user 1 sign-in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"password\": \"password\",\r\n  \"username\": \"johndoe123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arch.homework/sign-in",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "3) user 1 sign-in",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"password\",\r\n  \"username\": \"johndoe123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://arch.homework/sign-in",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"sign-in"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:36:28 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Access-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjcyMDM4ODgsImlkIjoiMTUiLCJpc3NfYXQiOjE3MjcyMDI5ODgsInVzZXJuYW1lIjoiam9obmRvZTEyMyJ9.iSb3emHY6cANeguMDZpEnMosUzwTV0Zbhmw8fiZzec8; Path=/; HttpOnly; Secure"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Refresh-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk4ODEzODgsImlkIjoiMTUiLCJpc3NfYXQiOjE3MjcyMDI5ODgsInVzZXJuYW1lIjoiam9obmRvZTEyMyJ9.4Ln0J1VlRF0lNw7Ta-vQlKy7KBTZWlcbsMA-O0rblBY; Path=/; HttpOnly; Secure"
+						}
+					],
+					"cookie": [],
+					"body": "signed in successfully. Welcome johndoe123"
+				}
+			]
+		},
+		{
+			"name": "4) Change user1 profile",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"bestjohn777@doe.com\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"phone\": \"+78002003040\",\r\n  \"username\": \"johndoe666\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arch.homework/api/v1/user/1",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "4) Change user1 profile",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"bestjohn777@doe.com\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"phone\": \"+78002003040\",\r\n  \"username\": \"johndoe666\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://arch.homework/api/v1/user/15",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"15"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:36:37 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "20"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Access-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjcyMDM4OTcsImlkIjoiMCIsImlzc19hdCI6MTcyNzIwMjk5NywidXNlcm5hbWUiOiJqb2huZG9lNjY2In0.D2s_XUsJKxTObvnMwiOGI55Jb5SAXIKlpgfrsKyXSz4; Path=/; HttpOnly; Secure"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Refresh-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk4ODEzOTcsImlkIjoiMCIsImlzc19hdCI6MTcyNzIwMjk5NywidXNlcm5hbWUiOiJqb2huZG9lNjY2In0.EstzotQpQd85LV81hYgfMQP5GAHqa3JSTGdnu3QAzC0; Path=/; HttpOnly; Secure"
+						}
+					],
+					"cookie": [],
+					"body": "updated successfully"
+				}
+			]
+		},
+		{
+			"name": "5) check updated profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arch.homework/api/v1/user/johndoe666",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"johndoe666"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "5) check updated profile",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://arch.homework/api/v1/user/johndoe666",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"johndoe666"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:36:41 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "126"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\"ID\":15,\"email\":\"\\\"bestjohn777@doe.com\\\"\",\"firstName\":\"John\",\"lastName\":\"Doe\",\"phone\":\"+78002003040\",\"username\":\"johndoe666\"}"
+				}
+			]
+		},
+		{
+			"name": "6) user 2 sign-up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"user2@main.com\",\r\n  \"firstName\": \"User2\",\r\n  \"lastName\": \"Doe\",\r\n  \"password\": \"password\",\r\n  \"phone\": \"+71001003241\",\r\n  \"username\": \"user2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arch.homework/sign-up",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"sign-up"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "6) user 2 sign-up",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"user2@main.com\",\r\n  \"firstName\": \"User2\",\r\n  \"lastName\": \"Doe\",\r\n  \"password\": \"password\",\r\n  \"phone\": \"+71001003241\",\r\n  \"username\": \"user2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://arch.homework/sign-up",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:37:23 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "22"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "signed up successfully"
+				}
+			]
+		},
+		{
+			"name": "7) user 2 sign-in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"password\": \"password\",\r\n  \"username\": \"user2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arch.homework/sign-in",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "7) user 2 sign-in",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"password\",\r\n  \"username\": \"user2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://arch.homework/sign-in",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"sign-in"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:37:29 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "37"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Access-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjcyMDM5NDksImlkIjoiMTYiLCJpc3NfYXQiOjE3MjcyMDMwNDksInVzZXJuYW1lIjoidXNlcjIifQ.SnGWLhj5DG1wHcUFA0ftOX_ViAYsQRbgiNX0IAus4_A; Path=/; HttpOnly; Secure"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "Refresh-Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk4ODE0NDksImlkIjoiMTYiLCJpc3NfYXQiOjE3MjcyMDMwNDksInVzZXJuYW1lIjoidXNlcjIifQ.AfPan9RofHSrzfqNtRbk7g-fBCJDjdHt2b_xMM182Ek; Path=/; HttpOnly; Secure"
+						}
+					],
+					"cookie": [],
+					"body": "signed in successfully. Welcome user2"
+				}
+			]
+		},
+		{
+			"name": "8) failed check user 1 data by user 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arch.homework/api/v1/user/johndoe666",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"johndoe666"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "8) failed check user 1 data by user 2",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://arch.homework/api/v1/user/johndoe666",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"johndoe666"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:37:36 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "you are not allowed to perform this action"
+				}
+			]
+		},
+		{
+			"name": "9) failed to change user1 profile by user 2",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"bestjohn777@doe.com\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"phone\": \"+78002003040\",\r\n  \"username\": \"johndoe666\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arch.homework/api/v1/user/1",
+					"protocol": "https",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "9) failed to change user1 profile by user 2",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"bestjohn777@doe.com\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"phone\": \"+78002003040\",\r\n  \"username\": \"johndoe666\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://arch.homework/api/v1/user/15",
+							"protocol": "https",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"15"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 24 Sep 2024 18:37:41 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "you are not allowed to perform this action"
+				}
+			]
+		}
+	]
+}
